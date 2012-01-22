@@ -48,7 +48,7 @@ def test_should_error_out_with_empty():
 
 def test_should_error_out_without_actual_tuples():
     c = framecurve.Curve(values = [framecurve.Comment("Only text")])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     assert len(v.errors) == 1
@@ -60,7 +60,7 @@ def test_should_error_out_with_dupe_frames():
             framecurve.FrameCorrelation(10, 123.4),
             framecurve.FrameCorrelation(10, 123.4)])
 
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     assert len(v.errors) == 1
@@ -71,7 +71,7 @@ def test_should_error_out_with_dupe_frames():
 def test_should_error_out_with_improper_sequencing():
     c = framecurve.Curve(values = [
             framecurve.FrameCorrelation(10, 123.4), framecurve.FrameCorrelation(1, 123.4)])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     assert len(v.errors) == 1
@@ -82,7 +82,7 @@ def test_should_error_out_with_improper_sequencing():
 def test_should_error_out_with_neg_source_and_dest_values():
     c = framecurve.Curve(values = [
             framecurve.FrameCorrelation(-10, 123.4), framecurve.FrameCorrelation(1, -345.67)])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     errs = ["The line 1 had it's at_frame value (-10) below 1. The spec mandates at_frame >= 1.",
@@ -125,7 +125,7 @@ def test_parse_from_err_no_tuples():
 
 def test_should_warn_without_preamble_url():
     c = framecurve.Curve(values = [framecurve.FrameCorrelation(10, 123.4)])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     assert not v.ok
@@ -137,7 +137,7 @@ def test_should_warn_without_preamble_url():
 
 def test_should_warn_without_preamble_headers():
     c = framecurve.Curve(values = [framecurve.Comment("http://framecurve.org/specification-v1"), framecurve.FrameCorrelation(10, 123.4)])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
     assert not v.ok
@@ -152,7 +152,7 @@ def test_should_parse_well():
             framecurve.Comment("http://framecurve.org/specification-v1"),
             framecurve.Comment("at_frame\tuse_frame_of_source"),
             framecurve.FrameCorrelation(10, 123.4)])
-    v = framecurve.Validator(crv = c)
+    v = framecurve.Validator(curve = c)
     assert v.ok
     assert len(v.warnings) == 0
     assert len(v.errors) == 0
