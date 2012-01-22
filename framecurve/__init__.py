@@ -19,7 +19,16 @@ class MalformedError(FramecurveError):
 
 
 class Comment(object):
+    """Represents a comment line
+
+    From spec:
+
+    A comment is a line starting with a hashmark (#).
+    """
+
     def __init__(self, text):
+        """``text`` should not include the leading # character
+        """
         self.text = text
 
     def __repr__(self):
@@ -89,7 +98,22 @@ class FrameCorrelation(tuple):
 
 
 class Curve(list):
-    def __init__(self, filename = None, values = None):
+    """Represents the FrameCurve, as a list of Comments and
+    FrameCorrelation objects
+    """
+
+    def __init__(self, filename=None, values=None):
+        """``filename`` is the name this curve represents
+
+        ``values`` is an optional list of objects, which allows the
+        Curve to be constructed like so:
+
+        >>> line1 = Comment("...")
+        >>> line2 = FrameCorrelation(2, 4.5)
+        >>> Curve(values = [line1, line2])
+        [Comment('...'), FrameCorrelation(at=2, value=4.5)]
+        """
+
         self.filename = filename
         if values is not None:
             self.extend(values)
@@ -106,7 +130,7 @@ class Parser(object):
             |                 # or:
             \.\d+             # ".2"
         )
-        ([eE][+-]?[0-9]+)?    # "1.2e3" or "1.2e-3" or "1.2e+3" (same with upper case E)
+        ([eE][+-]?[0-9]+)?    # "1.2e3", "1.2e-3" or "1.2e+3"
         $
         """, re.VERBOSE)
 
@@ -120,7 +144,7 @@ class Parser(object):
         else:
             filename = os.path.basename(filepath)
 
-        cur = Curve(filename = filename)
+        cur = Curve(filename=filename)
 
         for i, line in enumerate(self.fileobj):
             line = line.decode("utf-8")
@@ -137,18 +161,38 @@ class Parser(object):
             m = self.CORRELATION_RECORD.match(line)
             if m is not None:
                 cur.append(FrameCorrelation(
-                        at = int(m.group(1)),
-                        value = float(m.group(2))))
+                        at=int(m.group(1)),
+                        value=float(m.group(2))))
                 continue
 
             invalid_line_repr = repr(line).lstrip("u")
-            raise MalformedError("Malformed line %d: %s" % (i+1, invalid_line_repr))
+            raise MalformedError(
+                "Malformed line %d: %s" % (i + 1, invalid_line_repr))
 
         return cur
 
 
 class Validator(object):
-    def __init__(self, fileobj = None, crv = None):
+    """Validates a framecurve file, according to
+    http://framecurve.org/specification-v1.html
+
+    >>> line1 = Comment("...")
+    >>> line2 = FrameCorrelation(-22, 4.5)
+    >>> c1 = Curve(values = [line1, line2])
+    >>> v = Validator(curve = c1)
+    >>> v.ok
+    False
+    >>> len(v.errors) > 0
+    True
+    >>> len(v.warnings) > 0
+    True
+    """
+
+    def __init__(self, fileobj = None, curve = None):
+        """Either a file object (from open(...) or StringIO.StringIO
+        etc), or a Curve object
+        """
+
         self.fileobj = fileobj
 
         self.warnings = []
@@ -156,10 +200,10 @@ class Validator(object):
 
         if fileobj is not None:
             self._validate_fileobj(fileobj)
-        elif crv is not None:
-            self._validate_crv(crv = crv)
+        elif curve is not None:
+            self._validate_crv(crv = curve)
         else:
-            raise ValueError("Must supply either fileobj or crv")
+            raise ValueError("Must supply either fileobj or curve")
 
     @property
     def ok(self):
@@ -276,4 +320,12 @@ def parse_str(string):
 
 
 def validate(fileobj):
+    if isinstance(fileobj, basestring):
+        fileobj = open(fileobj)
+
     return Validator(fileobj)
+
+
+def validate_str(string):
+    import StringIO
+    return Validator(StringIO.StringIO(string))
