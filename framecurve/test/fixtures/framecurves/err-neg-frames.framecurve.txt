@@ -1,0 +1,3 @@
+# http://framecurve.org/specification-v1
+# at_frame	use_frame_of_source
+-1	-123.45
