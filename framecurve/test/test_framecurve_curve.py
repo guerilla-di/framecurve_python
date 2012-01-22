@@ -11,6 +11,7 @@ def test_one_tuple():
 
     assert len(c) == 1
     assert c[0] == framecurve.FrameCorrelation(1, 2.4)
+    assert str(c[0]) == "1\t2.4"
 
 
 def test_init_with_values():
