@@ -204,12 +204,6 @@ class Validator(object):
                     EXTENSION,
                     crv.filename))
 
-    def _verify_at_least_one_tuple(self, crv):
-        tuples = [x for x in crv if isinstance(x, FrameCorrelation)]
-        if len(tuples) == 0:
-            self.errors.append("The framecurve did not contain any frame correlation records")
-
-
     def _verify_no_duplicate_records(self, crv):
         dupes = []
         tuples = [x for x in crv if isinstance(x, FrameCorrelation)]
