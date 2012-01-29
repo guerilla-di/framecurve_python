@@ -6,8 +6,8 @@ Includes a parser, validator and serialiser
 
 To load a Framecurve file:
 
-   >>> import framecurve
-   >>> curve = framecurve.parse(open("framecurve/test/fixtures/framecurves/sample_framecurve1.framecurve.txt"))
+    >>> import framecurve
+    >>> curve = framecurve.parse(open("framecurve/test/fixtures/framecurves/sample_framecurve1.framecurve.txt"))
 
 The `curve` is basically a list of all the records stored in the file,
 including comments and so on:
