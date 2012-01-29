@@ -1,36 +1,51 @@
-"""
+import framecurve
+import StringIO
+
+
 def test_writes_preamble_if_needed():
-    f = Framecurve.Curve.new(Framecurve.Tuple.new(10, 123))
-    s = StringIO.new
-    Framecurve.Serializer.new.serialize(s, f)
-    assert "# http://framecurve.org/specification-v1\n# at_frame\tuse_frame_of_source\n10\t123.00000\r\n" == s.value()
+    curve = framecurve.Curve(values = [framecurve.FrameCorrelation(10, 123)])
+    expect = "# http://framecurve.org/specification-v1\r\n# at_frame\tuse_frame_of_source\r\n10\t123.00000\r\n"
+
+    fileobj = StringIO.StringIO()
+    framecurve.serialize(fileobj = fileobj, curve = curve)
+
+    print repr(fileobj.getvalue())
+    print repr(expect)
+    assert fileobj.getvalue() == expect
 
 
 def test_writes_only_existing_frames():
-  f = Framecurve.Curve.new(Framecurve.Tuple.new(10, 123), Framecurve.Tuple.new(12, 456))
-  s = StringIO.new
+  curve = framecurve.Curve(values = [framecurve.FrameCorrelation(10, 123), framecurve.FrameCorrelation(12, 456)])
+  expect = "# http://framecurve.org/specification-v1\r\n# at_frame\tuse_frame_of_source\r\n10\t123.00000\r\n12\t456.00000\r\n"
+  s = StringIO.StringIO()
+  framecurve.serialize(s, curve)
+
+  print repr(expect)
+  print repr(s.getvalue())
   
-  Framecurve.Serializer.new.serialize(s, f)
-  assert "# http://framecurve.org/specification-v1\n# at_frame\tuse_frame_of_source\n10\t123.00000\r\n12\t456.00000\r\n" == s.getvalue()
+  assert s.getvalue() == expect
 
 
 def test_validate_and_serialize_with_invalid_input():
-  f = Framecurve.Curve.new
-  s = StringIO()
+  curve = framecurve.Curve()
+  s = StringIO.StringIO()
+
   try:
-      Framecurve.Serializer.new.validate_and_serialize(s, f)
+      framecurve.Serializer(fileobj = s, curve = curve).validate_and_serialize()
   except framecurve.MalformedError:
       pass
   else:
       raise AssertionError("Expected MalformedError")
-  
 
 
 def test_validate_and_serialize_with_valid_input_works_without_errors():
-  f = Framecurve.Curve.new(Framecurve.Tuple.new(10, 123))
-  s = StringIO.new
-  
-  assert_nothing_raised { Framecurve.Serializer.new.validate_and_serialize(s, f) }
-  assert_equal "# http://framecurve.org/specification-v1\n# at_frame\tuse_frame_of_source\n10\t123.00000\r\n", s.string
+    curve = framecurve.Curve(values = [framecurve.FrameCorrelation(10, 123)])
+    expect = "# http://framecurve.org/specification-v1\r\n# at_frame\tuse_frame_of_source\r\n10\t123.00000\r\n"
 
-"""
+    fileobj = StringIO.StringIO()
+
+    framecurve.Serializer(fileobj = fileobj, curve = curve).validate_and_serialize()
+
+    print repr(fileobj.getvalue)
+    print repr(expect)
+    assert fileobj.getvalue() == expect
