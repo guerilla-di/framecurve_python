@@ -24,7 +24,7 @@ def parse_str(string):
     return Parser(StringIO.StringIO(string)).parse()
 
 
-def validate(fileobj):
+def validate(fileobj = None, curve = None):
     """Given a file-like object or a file-path, return a Validator
     object.
 
@@ -37,7 +37,7 @@ def validate(fileobj):
     if isinstance(fileobj, basestring):
         fileobj = open(fileobj)
 
-    return Validator(fileobj)
+    return Validator(fileobj = fileobj, curve = curve)
 
 
 def validate_str(string):
@@ -64,6 +64,7 @@ def serialize(fileobj, curve):
 
 
 def serialize_str(curve):
+    import StringIO
     fileobj = StringIO.StringIO()
     s = Serializer(fileobj = fileobj, curve = curve)
-    return s.getvalue()
+    return fileobj.getvalue()
