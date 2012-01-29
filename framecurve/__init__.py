@@ -67,4 +67,5 @@ def serialize_str(curve):
     import StringIO
     fileobj = StringIO.StringIO()
     s = Serializer(fileobj = fileobj, curve = curve)
+    s.serialize()
     return fileobj.getvalue()
