@@ -63,7 +63,7 @@ class FrameCorrelation(tuple):
             self.value)
 
     def __str__(self):
-        return "%d\t%s" % (self.at, format_float(self.value))
+        return "%d\t%.05f" % (self.at, self.value)
 
     def __eq__(self, other):
         return self.at == other.at and self.value == self.value

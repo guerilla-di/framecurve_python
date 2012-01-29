@@ -1,5 +1,6 @@
 import framecurve
 
+
 def test_empty():
     c = framecurve.Curve()
     assert len(c) == 0
@@ -9,9 +10,11 @@ def test_one_tuple():
     c = framecurve.Curve()
     c.append(framecurve.FrameCorrelation(1, 2.4))
 
+    print str(c[0])
+
     assert len(c) == 1
     assert c[0] == framecurve.FrameCorrelation(1, 2.4)
-    assert str(c[0]) == "1\t2.4"
+    assert str(c[0]) == "1\t2.40000"
 
 
 def test_init_with_values():
