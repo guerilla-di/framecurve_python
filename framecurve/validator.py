@@ -7,9 +7,10 @@ class Validator(object):
     """Validates a framecurve file, according to
     http://framecurve.org/specification-v1.html
 
+    >>> import framecurve
     >>> line1 = Comment("...")
     >>> line2 = FrameCorrelation(-22, 4.5)
-    >>> c1 = Curve(values = [line1, line2])
+    >>> c1 = framecurve.Curve(values = [line1, line2])
     >>> v = Validator(curve = c1)
     >>> v.ok
     False

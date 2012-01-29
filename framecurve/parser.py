@@ -21,17 +21,17 @@ class Parser(object):
         """, re.VERBOSE)
 
     def __init__(self, fileobj):
-        """fileobj is a file like object (from open() or StringIO etc)
+        r"""fileobj is a file like object (from open() or StringIO etc)
 
         Call parse method to get a Curve object:
 
         >>> import StringIO
-        >>> f = StringIO.StringIO("#...\n2\t3.4")
+        >>> f = StringIO.StringIO("# A comment\r\n2\t3.4\r\n")
         >>> p = Parser(f)
-        >>> p
-        <framecurve.parser.Parser object at 0x100447190>
+        >>> type(p)
+        <class 'framecurve.parser.Parser'>
         >>> p.parse()
-        [Comment(u'...'), FrameCorrelation(at=2, value=3.4)]
+        [Comment(u'A comment'), FrameCorrelation(at=2, value=3.4)]
         """
         self.fileobj = fileobj
 
