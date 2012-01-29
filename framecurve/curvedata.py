@@ -97,3 +97,8 @@ class Curve(list):
         self.filename = filename
         if values is not None:
             self.extend(values)
+
+    def frames(self):
+        for record in self:
+            if isinstance(record, FrameCorrelation):
+                yield record
