@@ -128,7 +128,8 @@ def test_should_warn_without_preamble_url():
     v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
-    assert not v.ok
+    assert v.ok
+    assert not v.perfect
     assert len(v.warnings) > 0
     assert len(v.errors) == 0
     msg = "It is recommended that a framecurve starts with a comment with the specification URL, http://framecurve.org/specification"
@@ -140,7 +141,8 @@ def test_should_warn_without_preamble_headers():
     v = framecurve.Validator(curve = c)
     print "errors", v.errors
     print "warnings", v.warnings
-    assert not v.ok
+    assert v.ok
+    assert not v.perfect
     assert len(v.warnings) > 0
     assert len(v.errors) == 0
     msg = "It is recommended for the second comment to provide a column header"

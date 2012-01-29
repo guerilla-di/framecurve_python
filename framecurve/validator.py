@@ -38,8 +38,12 @@ class Validator(object):
             raise ValueError("Must supply either fileobj or curve")
 
     @property
-    def ok(self):
+    def perfect(self):
         return len(self.warnings) == 0 and len(self.errors) == 0
+
+    @property
+    def ok(self):
+        return len(self.errors) == 0
 
     def _validate_fileobj(self, fileobj):
         p = Parser(self.fileobj)
