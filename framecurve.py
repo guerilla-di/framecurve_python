@@ -5,7 +5,7 @@ import re
 __version__ = (0, 1)
 
 EXTENSION = ".framecurve.txt"
-SPEC_URL = "http://framecurve.org/specification"
+SPEC_URL = "http://framecurve.org/specification-v1"
 COLUMN_HEADER = "at_frame\tuse_frame_of_source"
 
 
