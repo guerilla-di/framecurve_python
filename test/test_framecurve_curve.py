@@ -23,3 +23,19 @@ def test_init_with_values():
     c = framecurve.Curve(values = [e1, e2])
     assert len(c) == 2
     assert c[1].text == "Test"
+
+
+def test_frames_iter():
+    """Test Curve.frames iterator
+    """
+
+    c = framecurve.Curve()
+    c.append(framecurve.FrameCorrelation(1, 2.4))
+    c.append(framecurve.FrameCorrelation(2, 3.0))
+    c.append(framecurve.FrameCorrelation(3, 5.0))
+
+    ats = [x.at for x in c.frames()]
+    values = [x.value for x in c.frames()]
+
+    assert ats == [1, 2, 3]
+    assert values == [2.4, 3.0, 5.0]
