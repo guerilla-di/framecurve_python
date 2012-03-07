@@ -102,7 +102,7 @@ This can then be serialised, which :
     23	55.25000
     # A comment!
     24	56.00000
-    <BLANKLINE>
+
 
 Or to a file-like object (e.g from `open("myfile.framecurve.txt", "w+")` or a StringIO):
 
@@ -115,4 +115,3 @@ Or to a file-like object (e.g from `open("myfile.framecurve.txt", "w+")` or a St
     23	55.25000
     # A comment!
     24	56.00000
-    >>>
