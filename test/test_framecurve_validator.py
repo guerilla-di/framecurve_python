@@ -175,3 +175,12 @@ def test_should_parse_well():
     assert v.ok
     assert len(v.warnings) == 0
     assert len(v.errors) == 0
+
+
+def test_should_fail_with_nothing_supplied():
+    try:
+        v = framecurve.Validator()
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Validator should require an argument")
