@@ -178,23 +178,28 @@ class Parser(object):
         return cur
 
 
-def has_preamble(curve):
-    if len(curve) < 2:
-        return False
+def _ensure_preamble(curve):
+    """Ensure the curve contains the specification
+    """
 
-    first = curve[0]
-    second = curve[0]
+    import copy
+    curve = copy.copy(curve)
 
-    if not isinstance(first, Comment) or not isinstance(second, Comment):
-        return False
+    have_spec = False
+    if len(curve) > 0 and isinstance(curve[0], Comment):
+        have_spec = curve[0].text == SPEC_URL
 
-    if SPEC_URL not in first.text:
-        return False
+    if not have_spec:
+        curve.insert(0, Comment(SPEC_URL))
 
-    if COLUMN_HEADER not in second.text:
-        return False
+    have_header = False
+    if len(curve) > 1 and isinstance(curve[1], Comment):
+        have_header = curve[1].text == COLUMN_HEADER
 
-    return True
+    if not have_header:
+        curve.insert(1, Comment(COLUMN_HEADER))
+
+    return curve
 
 
 class Serializer(object):
@@ -203,17 +208,10 @@ class Serializer(object):
         self.fileobj = fileobj
         self.curve = curve
 
-    def write_preamble(self):
-        """Ensure the curve contains the specification
-        """
-        self.fileobj.write("# http://framecurve.org/specification-v1\r\n")
-        self.fileobj.write("# at_frame\tuse_frame_of_source\r\n")
-
     def serialize(self):
-        if not has_preamble(self.curve):
-            self.write_preamble()
+        with_preamble = _ensure_preamble(self.curve)
 
-        for record in self.curve:
+        for record in with_preamble:
             self.fileobj.write("%s\r\n" % (record, ))
 
     def validate_and_serialize(self):

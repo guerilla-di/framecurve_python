@@ -49,3 +49,20 @@ def test_validate_and_serialize_with_valid_input_works_without_errors():
     print repr(fileobj.getvalue)
     print repr(expect)
     assert fileobj.getvalue() == expect
+
+
+def test_completes_partial_preamble():
+    curve = framecurve.Curve(values = [
+            framecurve.Comment("http://framecurve.org/specification-v1"),
+            framecurve.FrameCorrelation(10, 123)])
+    expect = "# http://framecurve.org/specification-v1\r\n# at_frame\tuse_frame_of_source\r\n10\t123.00000\r\n"
+
+    fileobj = StringIO.StringIO()
+
+    framecurve.Serializer(fileobj = fileobj, curve = curve).validate_and_serialize()
+
+    print "got value:"
+    print fileobj.getvalue()
+    print "expect:"
+    print expect
+    assert fileobj.getvalue() == expect

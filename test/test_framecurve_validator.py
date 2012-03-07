@@ -149,6 +149,23 @@ def test_should_warn_without_preamble_headers():
     assert msg in v.warnings
 
 
+def test_should_warn_with_incomplete_preamble():
+    c = framecurve.Curve(values = [
+            framecurve.Comment("http://framecurve.org/specification-v1"),
+            framecurve.Comment("Blah nonsense"),
+            framecurve.FrameCorrelation(10, 123.4),
+            ])
+    v = framecurve.Validator(curve = c)
+    print "errors", v.errors
+    print "warnings", v.warnings
+    assert v.ok
+    assert not v.perfect
+    assert len(v.warnings) > 0
+    assert len(v.errors) == 0
+    msg = "It is recommended for the second comment to provide a column header"
+    assert msg in v.warnings
+
+
 def test_should_parse_well():
     c = framecurve.Curve(values = [
             framecurve.Comment("http://framecurve.org/specification-v1"),
