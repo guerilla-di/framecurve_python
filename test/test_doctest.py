@@ -10,11 +10,7 @@ def test_docstrings():
         assert failcount == 0
 
     modules = [
-        framecurve.common,
-        framecurve.curvedata,
-        framecurve.parser,
-        framecurve.serializer,
-        framecurve.validator,
+        framecurve,
         ]
 
     for m in modules:

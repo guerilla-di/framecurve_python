@@ -135,7 +135,7 @@ class Parser(object):
         >>> f = StringIO.StringIO("# A comment\r\n2\t3.4\r\n")
         >>> p = Parser(f)
         >>> type(p)
-        <class 'framecurve.parser.Parser'>
+        <class 'framecurve.Parser'>
         >>> p.parse()
         [Comment(u'A comment'), FrameCorrelation(at=2, value=3.4)]
         """
@@ -403,10 +403,10 @@ def validate_str(string):
     >>> v.warnings
     []
     >>> v.errors
-    ["Malformed line 1: '10.2  23.5'"]
+    ["Malformed line 1: '10    23.2'"]
     """
     import StringIO
-    return validator.Validator(fileobj = StringIO.StringIO(string))
+    return Validator(fileobj = StringIO.StringIO(string))
 
 
 def serialize(fileobj, curve):
