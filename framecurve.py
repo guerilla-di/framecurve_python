@@ -1,3 +1,13 @@
+#!/usr/bin/env python2
+
+"""Framecurve file handling library
+
+For more info, see http://framecurve.org
+
+The Framecurve project is subject to MIT license
+http://framecurve.org/scripts/#license
+"""
+
 import os
 import re
 
