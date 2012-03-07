@@ -8,6 +8,8 @@ The Framecurve project is subject to MIT license
 http://framecurve.org/scripts/#license
 """
 
+from __future__ import with_statement
+
 import os
 import re
 
@@ -142,12 +144,12 @@ class Parser(object):
         Call parse method to get a Curve object:
 
         >>> import StringIO
-        >>> f = StringIO.StringIO("# A comment\r\n2\t3.4\r\n")
+        >>> f = StringIO.StringIO("# A comment\r\n2\t3.5\r\n")
         >>> p = Parser(f)
         >>> type(p)
         <class 'framecurve.Parser'>
         >>> p.parse()
-        [Comment(u'A comment'), FrameCorrelation(at=2, value=3.4)]
+        [Comment(u'A comment'), FrameCorrelation(at=2, value=3.5)]
         """
         self.fileobj = fileobj
 
