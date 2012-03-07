@@ -41,27 +41,6 @@ class Comment(object):
         return v
 
 
-def format_float(x):
-    """Stringifies a float without trailing ".0" etc
-
-    >>> str(1.0)
-    '1.0'
-    >>> str(1.000)
-    '1.0'
-    >>> format_float(1.0)
-    '1'
-    >>> format_float(1.000)
-    '1'
-    >>> format_float(1.1)
-    '1.1'
-    >>> format_float(1.0001)
-    '1.0001'
-    """
-
-    x = str(x)
-    return x.rstrip("0").rstrip(".")
-
-
 class FrameCorrelation(tuple):
     """From spec:
 
