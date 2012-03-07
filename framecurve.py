@@ -40,6 +40,9 @@ class Comment(object):
         v = "# " + self.text.replace("\n", "").replace("\r", "")
         return v
 
+    def __eq__(self, other):
+        return self.text == other.text
+
 
 class FrameCorrelation(tuple):
     """From spec:
@@ -100,6 +103,12 @@ class Curve(list):
         for record in self:
             if isinstance(record, FrameCorrelation):
                 yield record
+
+    def __eq__(self, other):
+        same_fname = self.filename == self.filename
+        same_values = list.__eq__(self, other)
+
+        return same_fname and same_values
 
 
 class Parser(object):
