@@ -66,3 +66,9 @@ def test_completes_partial_preamble():
     print "expect:"
     print expect
     assert fileobj.getvalue() == expect
+
+def test_serialise_str_helper():
+    c1 = framecurve.parse_str("1\t2")
+    o1 = framecurve.serialize_str(c1)
+    expected = """# http://framecurve.org/specification-v1\r\n# at_frame\tuse_frame_of_source\r\n1\t2.00000\r\n"""
+    assert o1 == expected

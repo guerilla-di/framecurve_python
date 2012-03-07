@@ -64,3 +64,10 @@ def test_parser_fails_on_malformed_lines():
         pass
     else:
         assert False
+
+
+def test_parse_str_helper():
+    c1 = framecurve.parse_str("1\t2")
+    print c1
+    assert c1[0].at == 1
+    assert c1[0].value == 2.0
