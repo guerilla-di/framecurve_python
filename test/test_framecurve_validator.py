@@ -132,7 +132,7 @@ def test_should_warn_without_preamble_url():
     assert not v.perfect
     assert len(v.warnings) > 0
     assert len(v.errors) == 0
-    msg = "It is recommended that a framecurve starts with a comment with the specification URL, http://framecurve.org/specification"
+    msg = "It is recommended that a framecurve starts with a comment with the specification URL, http://framecurve.org/specification-v1"
     assert msg in v.warnings
 
 
