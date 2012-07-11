@@ -12,9 +12,9 @@ from __future__ import with_statement
 
 import os
 import re
+import math
 
-
-__version__ = (0, 1)
+__version__ = (0, 2)
 
 EXTENSION = ".framecurve.txt"
 SPEC_URL = "http://framecurve.org/specification-v1"
@@ -121,7 +121,8 @@ class Curve(list):
         same_values = list.__eq__(self, other)
 
         return same_fname and same_values
-
+    
+DELTA = 0.0001
 
 class Parser(object):
     COMMENT = re.compile(r"^#(.+)$")
@@ -389,7 +390,8 @@ def parse_str(string):
 
 
 def validate(fileobj = None, curve = None):
-    """Given a file-like object or a file-path, return a Validator
+    """
+    Given a file-like object or a file-path, return a Validator
     object.
 
     The object has an "ok" property which is True if the curve is
@@ -405,7 +407,8 @@ def validate(fileobj = None, curve = None):
 
 
 def validate_str(string):
-    """Validates a string containing a Framecurve
+    """
+    Validates a string containing a Framecurve
 
     >>> v = validate_str("10\t23.2")
     >>> v.ok
@@ -420,6 +423,9 @@ def validate_str(string):
 
 
 def serialize(fileobj, curve):
+    """
+    Serializes a passed Curve object and writes out to the passed IO handle
+    """
     if isinstance(fileobj, basestring):
         fileobj = open(fileobj)
 
@@ -428,8 +434,56 @@ def serialize(fileobj, curve):
 
 
 def serialize_str(curve):
+    """
+    Serializes a passed Curve object to a string
+    """
     import StringIO
     fileobj = StringIO.StringIO()
     s = Serializer(fileobj = fileobj, curve = curve)
     s.serialize()
     return fileobj.getvalue()
+
+def simplify(curve):
+    """
+    Reduces the curve by removing all linear keyframes that could be interpolated, and returns the
+    reduced curve without any comments
+    """
+    elements = list(curve.frames())
+    while __reduction_pass(elements) > 0:
+        pass
+    return Curve(values=elements)
+
+def __is_linear_segment(before, current, after):
+    """
+    Tells whether the three keyframes form a near-perfect linear segment
+    """
+    dx = float(after.at) - float(before.at)
+    dy = float(after.value) - float(before.value)
+    t = (current.at - before.at) / dx
+    linear_y = before.value + (dy * t)
+    return math.fabs(linear_y - float(current.value)) < DELTA
+    
+def __reduction_pass(curve):
+    """
+    Does a reduction pass on a Curve. All keyframes which are on a linear segment between other keyframes
+    will be deleted. This function has to be applied iteratively unless there is nothing left to remove. It will return
+    the number of keyframes deleted during operation
+    """
+    to_remove_at = []
+    # Scan all the keys in blocks of three, and remove the ones where the differential is small
+    for idx, current in enumerate(curve):
+        # Do not reduce on the first or the last keyframe since we always need a triplet
+        if idx == 0 or (idx + 1 == len(curve)):
+            pass
+        else:
+            before, after = curve[idx-1], curve[idx+1]
+            if __is_linear_segment(before, current, after):
+                to_remove_at.append(idx)
+    
+    # Delete keys when we are not iterating over them
+    # Also, http://stackoverflow.com/questions/1450111/delete-many-elements-of-list-python
+    for i in sorted(to_remove_at, reverse=True):
+        del curve[i]
+    
+    return len(to_remove_at)
+    

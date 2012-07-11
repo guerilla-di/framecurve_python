@@ -94,24 +94,47 @@ This curve can then be validated:
     []
 
 
-This can then be serialised, which :
+..and then serialized to a string, like so:
 
     >>> print framecurve.serialize_str(curve = curve1)
     # http://framecurve.org/specification-v1
-    # at_frame	use_frame_of_source
-    23	55.25000
+    # at_frame  use_frame_of_source
+    23  55.25000
     # A comment!
-    24	56.00000
+    24  56.00000
 
 
-Or to a file-like object (e.g from `open("myfile.framecurve.txt", "w+")` or a StringIO):
+...or to a file-like object (e.g from `open("myfile.framecurve.txt", "w+")` or a StringIO):
 
     >>> import StringIO
     >>> fileobj = StringIO.StringIO()
     >>> framecurve.serialize(fileobj = fileobj, curve = curve1)
     >>> print fileobj.getvalue()
     # http://framecurve.org/specification-v1
-    # at_frame	use_frame_of_source
-    23	55.25000
+    # at_frame  use_frame_of_source
+    23  55.25000
     # A comment!
-    24	56.00000
+    24  56.00000
+
+## Simplifying the curves
+
+When Framecurves are baked out it might happen that they are clogged with values on linear segments,
+where no change in timewarp speed occurs yet there are keyframes. To get rid of these intermediate keyframes,
+run a reduction pass using `simplify`:
+
+    >>> curve = framecurve.Curve()
+    >>> c1 = framecurve.FrameCorrelation(at=1, value=2.4)
+    >>> c2 = framecurve.FrameCorrelation(at=2, value=2.5)
+    >>> c3 = framecurve.FrameCorrelation(at=3, value=2.6)
+    >>> curve.append(c1)
+    >>> curve.append(c2)
+    >>> curve.append(c3)
+    >>> 
+    >>> framecurve.simplify(curve)
+    [FrameCorrelation(at=1, value=2.4), FrameCorrelation(at=3, value=2.6)]
+
+Make a habit of doing this when importing Framecurve files into your package.
+
+## Testing the library
+
+Install `nose` (via `pip` or otherwise) and run `nosetests` in the library directory.

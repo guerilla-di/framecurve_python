@@ -24,7 +24,6 @@ def test_init_with_values():
     assert len(c) == 2
     assert c[1].text == "Test"
 
-
 def test_frames_iter():
     """Test Curve.frames iterator
     """
