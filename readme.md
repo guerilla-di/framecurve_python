@@ -137,4 +137,29 @@ Make a habit of doing this when importing Framecurve files into your package.
 
 ## Testing the library
 
-Install `nose` (via `pip` or otherwise) and run `nosetests` in the library directory.
+Install `nose` (via `pip` or otherwise) and run `nosetests` in the
+library directory (you can specify the `test/` dir to be "safe")
+
+    $ pip install nose
+    $ nosetests test/
+    ........................................
+    ----------------------------------------------------------------------
+    Ran 40 tests in 0.135s
+
+The `pyflakes` output should be clean (it catches things like
+references to undefined names):
+
+    $ pip install pyflakes
+    $ pyflakes framecurve.py
+    $
+
+Finally, if you're feeling suitably pedantic, the
+[`pep8`](http://pypi.python.org/pypi/pep8/) module should be run on
+the module to check for consistency in whitespacing and such,
+
+    $ pip install pep8
+    $ pep8 --repeat --ignore=E501 framecurve.py
+
+The output from `pep8.py` doesn't have to be perfectly clean
+(particularly the E501 "line too long" message can often be ignored if
+it will make the code less readable)

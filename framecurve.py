@@ -121,8 +121,10 @@ class Curve(list):
         same_values = list.__eq__(self, other)
 
         return same_fname and same_values
-    
+
+
 DELTA = 0.0001
+
 
 class Parser(object):
     COMMENT = re.compile(r"^#(.+)$")
@@ -443,17 +445,19 @@ def serialize_str(curve):
     s.serialize()
     return fileobj.getvalue()
 
+
 def simplify(curve):
     """
     Reduces the curve by removing all linear keyframes that could be interpolated, and returns the
     reduced curve without any comments
     """
     elements = list(curve.frames())
-    while __reduction_pass(elements) > 0:
+    while _reduction_pass(elements) > 0:
         pass
     return Curve(values=elements)
 
-def __is_linear_segment(before, current, after):
+
+def _is_linear_segment(before, current, after):
     """
     Tells whether the three keyframes form a near-perfect linear segment
     """
@@ -462,8 +466,9 @@ def __is_linear_segment(before, current, after):
     t = (current.at - before.at) / dx
     linear_y = before.value + (dy * t)
     return math.fabs(linear_y - float(current.value)) < DELTA
-    
-def __reduction_pass(curve):
+
+
+def _reduction_pass(curve):
     """
     Does a reduction pass on a Curve. All keyframes which are on a linear segment between other keyframes
     will be deleted. This function has to be applied iteratively unless there is nothing left to remove. It will return
@@ -476,14 +481,13 @@ def __reduction_pass(curve):
         if idx == 0 or (idx + 1 == len(curve)):
             pass
         else:
-            before, after = curve[idx-1], curve[idx+1]
-            if __is_linear_segment(before, current, after):
+            before, after = curve[idx - 1], curve[idx + 1]
+            if _is_linear_segment(before, current, after):
                 to_remove_at.append(idx)
-    
+
     # Delete keys when we are not iterating over them
     # Also, http://stackoverflow.com/questions/1450111/delete-many-elements-of-list-python
     for i in sorted(to_remove_at, reverse=True):
         del curve[i]
-    
+
     return len(to_remove_at)
-    
