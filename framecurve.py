@@ -14,7 +14,7 @@ import os
 import re
 import math
 
-__version__ = (0, 2)
+__version__ = (0, 3)
 
 EXTENSION = ".framecurve.txt"
 SPEC_URL = "http://framecurve.org/specification-v1"
@@ -110,7 +110,19 @@ class Curve(list):
         self.filename = filename
         if values is not None:
             self.extend(values)
-
+    
+    def add_frame(self, at, value):
+        """
+        Adds a frame correlation with the passed values
+        """
+        self.append(FrameCorrelation(at=at, value=value))
+    
+    def add_comment(self, text):
+        """
+        Adds a comment with the passed comment text
+        """
+        self.append(Comment(text))
+        
     def frames(self):
         for record in self:
             if isinstance(record, FrameCorrelation):

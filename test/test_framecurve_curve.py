@@ -16,6 +16,14 @@ def test_one_tuple():
     assert c[0] == framecurve.FrameCorrelation(1, 2.4)
     assert str(c[0]) == "1\t2.40000"
 
+def test_generator_methods():
+    c = framecurve.Curve()
+    c.add_frame(2, 3.4)
+    c.add_comment("Yay!")
+    assert len(c) == 2
+    assert c[0].at == 2
+    assert c[0].value == 3.4
+    assert c[1].text == "Yay!"
 
 def test_init_with_values():
     e1 = framecurve.FrameCorrelation(1, 2.4)
