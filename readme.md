@@ -66,7 +66,14 @@ First, create a Curve object:
 
     >>> curve1 = framecurve.Curve()
 
-Then append Comment's, FrameCorrelation's and such:
+Then you can call the generation methods on it to fill it up:
+
+    >>> c = framecurve.Curve()
+    >>> c.add_frame(2, 3.4)
+    >>> c.add_comment("Here we arriveth at the endeth of the footages")
+    >>> c.add_frame(125, 125.0)
+
+...or append Comment's, FrameCorrelation's and such:
 
     >>> c1 = framecurve.FrameCorrelation(at = 23, value = 55.25)
     >>> curve1.append(c1)
